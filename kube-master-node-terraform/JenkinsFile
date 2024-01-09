@@ -1,0 +1,43 @@
+pipeline{
+    agent any
+    stages {
+        stage('Checkout from Git'){
+            steps{
+                git 'https://github.com/paulo-alegre/devops-pipeline-terraform-manifest.git'
+            }
+        }
+        stage('Terraform version'){
+             steps{
+                 sh 'terraform --version'
+             }
+        }
+        stage('Terraform init'){
+             steps{
+                 dir('kube-master-node-terraform') {
+                      sh 'terraform init'
+                   }      
+             }
+        }
+        stage('Terraform validate'){
+             steps{
+                 dir('kube-master-node-terraform') {
+                      sh 'terraform validate'
+                   }      
+             }
+        }
+        stage('Terraform plan'){
+             steps{
+                 dir('kube-master-node-terraform') {
+                      sh 'terraform plan'
+                   }      
+             }
+        }
+        stage('Terraform apply/destroy'){
+             steps{
+                 dir('kube-master-node-terraform') {
+                      sh 'terraform ${action} --auto-approve'
+                   }      
+             }
+        }
+    }
+}
