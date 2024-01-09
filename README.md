@@ -1,0 +1,1 @@
+# devops-pipeline-terraform-manifest
