@@ -65,15 +65,13 @@ pipeline{
             }
         }
 
-
-        stage("Deploying to K8s Cluster"){
-            steps {
-                withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'k8s', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
-                sh "kubectl apply -f deployment.yml"
+        stage("Deploy to Cluster"){
+            steps{
+               withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'k8s', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
+                    sh "kubectl delete -f deployment.yml"
+                } 
             }
-    }
-}
-
+        }
 
     }
     
