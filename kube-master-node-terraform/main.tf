@@ -1,5 +1,5 @@
-resource "aws_iam_role" "terraform_role" {
-  name = "terraform_role"
+resource "aws_iam_role" "k8s_role" {
+  name = "k8s_role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -16,14 +16,14 @@ resource "aws_iam_role" "terraform_role" {
 EOF
 }
 
-resource "aws_iam_role_policy_attachment" "jenkins_terraform_attachment" {
-  role       = aws_iam_role.terraform_role.name
+resource "aws_iam_role_policy_attachment" "k8s_terraform_attachment" {
+  role       = aws_iam_role.k8s_role.name
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 
-resource "aws_iam_instance_profile" "jenkins_terraform_profile" {
-  name = "Jenkins-terraform"
-  role = aws_iam_role.terraform_role.name
+resource "aws_iam_instance_profile" "k8s_terraform_profile" {
+  name = "k8s-terraform"
+  role = aws_iam_role.k8s_role.name
 }
 
 
@@ -65,7 +65,7 @@ resource "aws_instance" "k8s" {
   key_name      = "ipau"
   vpc_security_group_ids = [aws_security_group.k8s-sg.id]
   user_data              = templatefile("./install_kube.sh", {})
-  iam_instance_profile   = aws_iam_instance_profile.jenkins_terraform_profile.name
+  iam_instance_profile   = aws_iam_instance_profile.k8s_terraform_profile.name
 
   root_block_device {
     volume_size = 10
